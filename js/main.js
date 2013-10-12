@@ -37,6 +37,7 @@ $(function () {
                 console.error("Количество элементов должно составлять не более 1000 http://vk.com/dev/users.get, так что надо дописать условия для последователных запросв")
                 //TODO: Дописать условия для людей у кого больше 1000 друзей
             }
+            var thet = this;
             VK.api('users.get', {
                 user_id: this.allFriend.toString(),
                 fields: "can_write_private_message,online,counters,contacts, photo_50, photo_100, photo_200_orig,verified",
@@ -45,6 +46,7 @@ $(function () {
                 _.each(data.response.items, function (item) {
                     thet.add(data.response.items)
                 });
+
             });
         },
         getIdFriends: function () {
