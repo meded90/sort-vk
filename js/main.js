@@ -29,7 +29,7 @@ $(function () {
         allFriend: "",
         initialize: function () {
             this.getIdFriends();
-            this.on('chang:allFriend', this.getFriends)
+            this.on('change:allFriend', this.getFriends)
 
         },
         getFriends: function () {
@@ -37,17 +37,12 @@ $(function () {
                 console.error("Количество элементов должно составлять не более 1000 http://vk.com/dev/users.get, так что надо дописать условия для последователных запросв")
                 //TODO: Дописать условия для людей у кого больше 1000 друзей
             }
-            var thet = this;
             VK.api('users.get', {
                 user_id: this.allFriend.toString(),
                 fields: "can_write_private_message,online,counters,contacts, photo_50, photo_100, photo_200_orig,verified",
                 name_case: "Nom"
             }, function (data) {
-                _.each(data.response.items, function (item) {
-                    thet.add(data.response.items)
-                });
-                thet.trigger("addAllFriend")
-
+                thet.add(data.response.items)
             });
         },
         getIdFriends: function () {
@@ -65,7 +60,7 @@ $(function () {
         initialize: function () {
             this.friends = new Friends();
 //            this.listenTo(this.friends, 'addAllFriends', this.startSort)
-            this.listenTo(this.friends, 'addAllFriend', this.startSort)
+            this.listenTo(this.friends, 'change', this.startSort)
             this.on("afterRender", function () {
                 this.region.html(this.$el)
             }, this)
