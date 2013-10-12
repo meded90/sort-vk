@@ -20,7 +20,14 @@ $(function () {
             this.getInfo()
         },
         getInfo: function () {
+            var thet = this;
 
+            VK.api('users.get', {
+                fields: "can_write_private_message,online,counters,contacts, photo_50, photo_100, photo_200_orig,verified",
+                name_case: "Nom"
+            }, function (data) {
+                thet.set(date.response[0])
+            });
         }
     });
     var Friends = Backbone.Collection.extend({
@@ -37,7 +44,7 @@ $(function () {
                 _.each(data.response.items, function (item) {
                     thet.add(item)
                 });
-                thet.trigger("addAllFriends");
+//                thet.trigger("addAllFriends");
             });
         }
     });
@@ -47,7 +54,8 @@ $(function () {
         template: $('#itemList').html(),
         initialize: function () {
             this.friends = new Friends();
-            this.listenTo(this.friends, 'addAllFriends', this.startSort)
+//            this.listenTo(this.friends, 'addAllFriends', this.startSort)
+            this.listenTo(this.friends, 'change', this.startSort)
         },
         startSort: function () {
             this.friends.sortBy(function (item) {
