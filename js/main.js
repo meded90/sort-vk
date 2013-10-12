@@ -47,7 +47,7 @@ $(function () {
         template: $('#itemList').html(),
         initialize: function () {
             this.friends = new Friends();
-            this.friends.on('addAllFriends', this.startSort(), this)
+            this.listenTo(this.friends, 'addAllFriends', this.startSort)
         },
         startSort: function () {
             this.friends.sortBy(function (item) {
