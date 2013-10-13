@@ -21,7 +21,6 @@ $(function () {
         },
         getInfo: function () {
             var thet = this;
-
         }
     });
     var Friends = Backbone.Collection.extend({
@@ -92,6 +91,4 @@ $(function () {
         alert('жопа че')
     }, '5.2');
 
-
-})
-;
+});
