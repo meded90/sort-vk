@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сортировка</title>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
     <script src="http://vk.com/js/api/xd_connection.js?2" type="text/javascript"></script>
 
     <script src="js/jquery-2.0.3.js" type="text/javascript"></script>
@@ -12,32 +13,61 @@
     <script src="js/underscore.js" type="text/javascript"></script>
     <script src="js/backbone.js" type="text/javascript"></script>
     <script src="js/jquery.ba-throttle-debounce.js" type="text/javascript"></script>
-    <script src="js/main.js" type="text/javascript"></script>
 
 
 </head>
 <body>
 <div class="container">
-    <h1>Сортировка </h1>
+    <h1>Сортировка друзей по их популярности</h1>
 
+    <div id="parsing"></div>
+    <div class="progress progress-striped active">
+        <div class="progress-bar" id="progres" style=""></div>
+    </div>
     <div id="list"></div>
     <script id="itemList" type="text/x-handlebars-template">
         <div class="row">
             <div class="col-md-3 col-sm-3 col-xs-3">
-                <a class="thumbnail" href="#">
-                    <img alt="" src="http://placekitten.com/200/200">
+                <a class="thumbnail" href="http://vk.com/id<%=id%>">
+                    <img alt="" src="<%=photo_100%>">
                 </a>
             </div>
             <div class="col-md-9 col-sm-9 col-xs-9">
                 <div class="info-preson">
-                    <h3 class="name-user"> Имя пользоватя <br/>
-                        <small>213</small>
+                    <%if (online){%>
+                    <span class="pull-right is-online">online</span>
+                    <%}%>
+                    <h3 class="name-user"> <%=first_name%> <%=last_name%><br/>
+
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 col-xs-4">
+                                <small>
+                                    Друзей:<%=counters.friends%>
+                                </small>
+
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-xs-4">
+                                <small>
+                                    Подипчиков:<%=counters.followers%>
+                                </small>
+
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-xs-4">
+                                <small>
+                                    Всего:<%=counters.followers+counters.friends%>
+                                </small>
+
+                            </div>
+                        </div>
                     </h3>
+                    <a class="btn btn-primary btn-xs" target="_blank" href="http://vk.com/write<%=id%>">Отправить
+                        сообщение</a>
                 </div>
             </div>
         </div>
     </script>
 
 </div>
+<script src="js/main.js" type="text/javascript"></script>
 </body>
 </html>
