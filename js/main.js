@@ -167,7 +167,7 @@
 
             this.friends.models = this.friends.sortBy(function (item) {
                 var counters = item.get('counters');
-                if (counters) {
+                if (counters.friends + counters.followers) {
                     console.log(counters.friends + counters.followers);
                     return -(counters.friends + counters.followers);
                 } else {
