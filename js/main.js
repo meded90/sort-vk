@@ -45,13 +45,15 @@
             var thet = this;
             VK.api('users.get', {
                 user_ids: this.get("id"),
-                fields: "counters,photo_100,can_write_private_message,online",
+                fields: "counters,photo_100,can_write_private_message,online,last_seen",
                 name_case: "Nom"
             }, function (data) {
                 if (data.error) {
-                    console.error(data.error.error_msg);
+//                    console.error(data.error.error_msg);
                     if (data.error.error_code === 6) {
-                        setTimeout(thet.getInfo.apply(thet), 500);
+                        setTimeout(function () {
+                            thet.getInfo.apply(thet)
+                        }, 500);
                         return;
                     }
                     thet.get("deferred").resolve()
@@ -94,16 +96,16 @@
             var thet = this;
             var isLastPack = false
 
-            var indexStart = indexEnd || 0
+            var indexStart = indexEnd || 0;
 
             var indexTo = indexStart + this.cauntAddInOneTime
-            //TODO: убрать огоничине
-//            if (indexTo > 100){
+            //TODO: убрать огоничине нужно для дебага
+//            if (indexTo > 20){
             if (indexTo > this.allFriend.length) {
                 indexTo = this.allFriend.length;
                 isLastPack = true
             }
-
+            this.indexNow = indexTo
 
             this.add(
                 this.allFriend.slice(indexStart, indexTo)
@@ -123,24 +125,34 @@
                     setTimeout(
                         function () {
                             thet.getFriends(indexTo + 1)
-                        }, 300
+                        }, 400
                     )
                 }
             });
         }
     });
-
+    moment.lang("ru");
     var ViweFriends = Backbone.View.extend({
         region: $('#list'),
         parsing: $("#parsing"),
         progres: $("#progres"),
+        filter: $("#filter"),
         template: _.template($('#itemList').html()),
         initialize: function () {
             var that = this;
             this.friends = new Friends();
-
             this.friends.on('change:complitAllFriend', function () {
-                that.startSort();
+                that.filter.find("label").removeAttr("disabled");
+
+                var radiButon = that.filter.find("input");
+                var sortTo = function () {
+                    var filterName = radiButon.filter(":checked").val();
+                    that[filterName]();
+                };
+                sortTo();
+                radiButon.change(function () {
+                    sortTo();
+                });
             });
 
             this.on("afterRender", function () {
@@ -149,45 +161,45 @@
                 this.region.html(this.$el);
             }, this);
 
-            this.on('all', function (e) {
-                console.warn(e);
-            });
+//            this.on('all', function (e) {
+//                console.warn(e);
+//            });
 
             this.friends.on("add", this.renderParsing, this);
 
             this.on("sortComplain", this.render, this);
         },
         renderParsing: function () {
-            this.parsing.html("спарсилось " + this.friends.length + " из " + this.friends.allFriend.length + " друзей");
+            this.parsing.html("спарсилось " + this.friends.indexNow + " из " + this.friends.allFriend.length + " друзей");
             this.progres.css({
-                "width": this.friends.length / this.friends.allFriend.length * 100 + "%"
+                "width": this.friends.indexNow / this.friends.allFriend.length * 100 + "%"
             })
         },
-        startSort: function () {
-
+        sortRang: function () {
             this.friends.models = this.friends.sortBy(function (item) {
                 var counters = item.get('counters');
                 if (counters.friends + counters.followers) {
                     console.log(counters.friends + counters.followers);
-                    return -(counters.friends + counters.followers);
+                    return -(counters.friends + counters.followers) || -99999;
                 } else {
-                    debugger;
-                    return -99999
+                    return -99999;
                 }
             });
-            console.log('FACK');
-            this.friends.each(function (item) {
-                var counters = item.get('counters');
-                if (counters) {
-                    console.log(counters.friends + counters.followers);
-                } else {
-                }
-            })
+
+            this.trigger("sortComplain")
+        },
+        sortTime: function () {
+            debugger;
+            this.friends.models = this.friends.sortBy(function (item) {
+                return item.get("last_seen").time || -99999;
+            });
             this.trigger("sortComplain")
         },
         render: function () {
             var thet = this;
+
             this.trigger("beforeRender");
+            this.$el.html("");
             this.friends.each(function (item) {
                 thet.$el.append(function () {
                     return thet.template(item.toJSON());
