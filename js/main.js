@@ -30,7 +30,10 @@
             home_phone: '',
             verified: 0,
             isComplit: false,
-            counters: {}
+            counters: {},
+            last_seen: {
+                time: 0
+            }
 
         },
         initialize: function () {
@@ -100,7 +103,7 @@
 
             var indexTo = indexStart + this.cauntAddInOneTime
             //TODO: убрать огоничине нужно для дебага
-//            if (indexTo > 20){
+//            if (indexTo > 100){
             if (indexTo > this.allFriend.length) {
                 indexTo = this.allFriend.length;
                 isLastPack = true
@@ -189,7 +192,6 @@
             this.trigger("sortComplain")
         },
         sortTime: function () {
-            debugger;
             this.friends.models = this.friends.sortBy(function (item) {
                 return item.get("last_seen").time || -99999;
             });
