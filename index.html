@@ -47,7 +47,7 @@
                     <%if (online){%>
                     <span class="pull-right is-online">online</span>
                     <%} else {%>
-                    <span class="pull-right is-online">заходил <% print( moment(last_seen.time, "X").fromNow())%></span>
+                    <span class="pull-right is-online">заходил <% print( moment(last_seen ? last_seen.time : 0 , "X").fromNow())%></span>
                     <%}%>
                     <h3 class="name-user"> <%=first_name%> <%=last_name%><br/>
 
