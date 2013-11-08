@@ -193,7 +193,7 @@
         },
         sortTime: function () {
             this.friends.models = this.friends.sortBy(function (item) {
-                return item.get("last_seen").time || -99999;
+                return item.get("last_seen").time || 0;
             });
             this.trigger("sortComplain")
         },
