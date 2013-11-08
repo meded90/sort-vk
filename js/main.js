@@ -183,9 +183,9 @@
                 var counters = item.get('counters');
                 if (counters.friends + counters.followers) {
                     console.log(counters.friends + counters.followers);
-                    return -(counters.friends + counters.followers) || -99999;
+                    return -(counters.friends + counters.followers) || 0;
                 } else {
-                    return -99999;
+                    return 0;
                 }
             });
 
